@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-const connectDb = async (DATABASE_URL) => {
+const connectDB = async (DATABASE_URL) => {
   try {
     const DB_OPTION = {
       dbName: "AuthenticationApi",
@@ -10,4 +10,4 @@ const connectDb = async (DATABASE_URL) => {
     console.error("Error", error);
   }
 };
-export default connectDb;
+export default connectDB;

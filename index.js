@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
-import connectDb from "./configs/connectdb.js";
+import connectDB from "./configs/connectdb.js";
 
 // dotenv config
 dotenv.config();
@@ -13,8 +13,12 @@ app.use(cors());
 const port = process.env.PORT;
 const databaseUrl = process.env.DATABASE_URL;
 // data base connecting
-connectDb(databaseUrl);
+connectDB(databaseUrl);
 
+// Config JSON
+app.use(express.json());
+
+// listen app
 app.listen(port, () => {
   console.log(`Port running at https://localhost:${port}`);
 });
