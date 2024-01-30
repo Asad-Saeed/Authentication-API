@@ -22,6 +22,8 @@ class UserController {
               tc: tc,
             });
             await doc.save();
+            res.send({ status: "success", message: "User created succefully" });
+
           } catch (error) {
             // console.log("error", error);
             res.send({ status: "failed", message: "Unable to register" });
