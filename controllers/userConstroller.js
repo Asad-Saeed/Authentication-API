@@ -1,4 +1,4 @@
-import UserModal from "../models/User";
+import UserModal from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -14,7 +14,7 @@ class UserController {
           try {
             // Password hashing
             const salt = await bcrypt.genSalt(10);
-            const hashPassword=await bcrypt.hash(password,salt)
+            const hashPassword = await bcrypt.hash(password, salt);
             const doc = new UserModal({
               name: name,
               email: email,
@@ -38,3 +38,5 @@ class UserController {
     }
   };
 }
+
+export default UserController;
