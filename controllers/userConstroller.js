@@ -22,7 +22,7 @@ class UserController {
               tc: tc,
             });
             await doc.save();
-            res.send({ status: "success", message: "User created succefully" });
+            res.status(201).send({ status: "success", message: "User created succefully" });
 
           } catch (error) {
             // console.log("error", error);
