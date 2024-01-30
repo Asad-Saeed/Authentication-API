@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// Defining Schema
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -21,3 +22,8 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 });
+
+// Modal
+const UserModal = mongoose.Model("User", userSchema);
+
+export default UserModal;
