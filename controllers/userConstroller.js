@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 class UserController {
+  // User Register
   static userRegistration = async (req, res) => {
     try {
       const { name, email, password, password_confirmation, tc } = req.body;
@@ -33,7 +34,7 @@ class UserController {
               res.status(201).send({
                 status: "success",
                 message: "User created succefully",
-                accessToken: token,
+                token: token,
               });
             } catch (error) {
               res.send({ status: "failed", message: "Failed to register" });
@@ -52,6 +53,7 @@ class UserController {
       res.send({ status: "failed", message: "Failed to register" });
     }
   };
+  // User Login
   static userLogin = async (req, res) => {
     try {
       const { email, password } = req.body;
@@ -70,7 +72,7 @@ class UserController {
             res.send({
               status: "success",
               message: "Login Successfully",
-              accessToken: token,
+              token: token,
             });
           } else {
             res.send({
@@ -83,6 +85,27 @@ class UserController {
             status: "failed",
             message: "You are not a register user!",
           });
+        }
+      } else {
+        res.send({ status: "failed", message: "All fields are required" });
+      }
+    } catch (error) {
+      res.send({ status: "failed", message: "Failed to login" });
+    }
+  };
+  // User Password Change
+  static changeUserPassword = async (req, res) => {
+    try {
+      const { password, password_confirmation } = req.body;
+      if (password && password_confirmation) {
+        if (password !== password_confirmation) {
+          res.send({
+            status: "failed",
+            message: "New Password and Confirmed Password does not match",
+          });
+        } else {
+          const salt = await bcrypt.genSalt(10);
+          const hashPassword = await bcrypt.hash(password, salt);
         }
       } else {
         res.send({ status: "failed", message: "All fields are required" });
