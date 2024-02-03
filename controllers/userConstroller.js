@@ -129,6 +129,42 @@ class UserController {
       res.send({ status: "failed", message: "Failed to get user data" });
     }
   };
+  // User password reset email
+  static sendResetPasswordEmail = async (req, res) => {
+    try {
+      const { email } = req.body;
+      if (email) {
+        const user = await UserModal.findOne({ email: email });
+        if (user) {
+          const secret = user._id + process.env.JWT_SECRET_KEY;
+          const token = jwt.sign({ UserID: user._id }, secret, {
+            expiresIn: "15m",
+          });
+          const link = `${process.env.FRONTEND_RESET_URL}/${user._id}/${token}`;
+          console.log("link", link);
+          res.send({
+            status: "success",
+            message: "Password reset email sent successfully",
+          });
+        } else {
+          res.send({
+            status: "failed",
+            message: "Email does not exist",
+          });
+        }
+      } else {
+        res.send({
+          status: "failed",
+          message: "Email field is required",
+        });
+      }
+    } catch (error) {
+      res.send({
+        status: "failed",
+        message: "Failed to send rest password email",
+      });
+    }
+  };
 }
 
 export default UserController;

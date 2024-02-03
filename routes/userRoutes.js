@@ -14,5 +14,7 @@ router.post("/login", UserController.userLogin);
 // Protected Routes
 router.post("/changepassword", UserController.changeUserPassword);
 router.get("/loggeduser", UserController.loggedUserData);
+router.post("/sendresetpasswordemail", UserController.sendResetPasswordEmail);
+
 
 export default router;
