@@ -121,6 +121,14 @@ class UserController {
       res.send({ status: "failed", message: "Failed to Change Password" });
     }
   };
+  // Logged user data
+  static loggedUserData = async (req, res) => {
+    try {
+      res.send({ user: req.user });
+    } catch (error) {
+      res.send({ status: "failed", message: "Failed to get user data" });
+    }
+  };
 }
 
 export default UserController;
