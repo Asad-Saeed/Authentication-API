@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import UserModal from "../models/User";
+import UserModal from "../models/User.js";
 
 const checkUserAuth = async (req, res, next) => {
   //   Get token from frontend headers
@@ -9,9 +9,9 @@ const checkUserAuth = async (req, res, next) => {
     try {
       token = authorization.split(" ")[1];
       //   Verify token
-      const { userId } = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      const { UserID } = jwt.verify(token, process.env.JWT_SECRET_KEY);
       //   Get user form token
-      req.user = await UserModal.findById(userId).select(-password);
+      req.user = await UserModal.findById(UserID).select("-password");
       next();
     } catch (error) {
       res.status(401).send({ status: "failed", message: "Unauthorized User" });

@@ -105,13 +105,20 @@ class UserController {
           });
         } else {
           const salt = await bcrypt.genSalt(10);
-          const hashPassword = await bcrypt.hash(password, salt);
+          const newHashPassword = await bcrypt.hash(password, salt);
+          await UserModal.findByIdAndUpdate(req.user._id, {
+            $set: { password: newHashPassword },
+          });
+          res.send({
+            status: "success",
+            message: "Password change successfully",
+          });
         }
       } else {
         res.send({ status: "failed", message: "All fields are required" });
       }
     } catch (error) {
-      res.send({ status: "failed", message: "Failed to login" });
+      res.send({ status: "failed", message: "Failed to Change Password" });
     }
   };
 }
