@@ -1,6 +1,7 @@
 import UserModal from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import transporter from "../configs/emailConfig.js";
 
 class UserController {
   // User Register
@@ -141,10 +142,17 @@ class UserController {
             expiresIn: "1h",
           });
           const link = `${process.env.FRONTEND_RESET_URL}/${user._id}/${token}`;
-          console.log("link", link);
+          // Send Email
+          const info = await transporter.sendMail({
+            from: process.env.EMAIL_FROM,
+            to: user?.email,
+            subject: "Asad Saeed Auth Api Password Reset Link",
+            html: `<a href=${link}>Click here</a> to reset your password.`,
+          });
           res.send({
             status: "success",
             message: "Password reset email sent successfully",
+            info: info,
           });
         } else {
           res.send({
@@ -162,6 +170,7 @@ class UserController {
       res.send({
         status: "failed",
         message: "Failed to send rest password email",
+        error: error.message,
       });
     }
   };
@@ -210,10 +219,10 @@ class UserController {
       res.send({
         status: "failed",
         message: "Failed to Reset Password",
+        error: error.message,
       });
     }
   };
-  
 }
 
 export default UserController;
