@@ -138,7 +138,7 @@ class UserController {
         if (user) {
           const secret = user._id + process.env.JWT_SECRET_KEY;
           const token = jwt.sign({ UserID: user._id }, secret, {
-            expiresIn: "15m",
+            expiresIn: "1h",
           });
           const link = `${process.env.FRONTEND_RESET_URL}/${user._id}/${token}`;
           console.log("link", link);
@@ -165,6 +165,55 @@ class UserController {
       });
     }
   };
+  // User password reset
+  static userPasswordReset = async (req, res) => {
+    try {
+      const { password, password_confirmation } = req.body;
+      const { id, token } = req.params;
+      const user = await UserModal.findById(id);
+      const new_secret = user._id + process.env.JWT_SECRET_KEY;
+      jwt.verify(token, new_secret, { expiresIn: "1h" });
+      try {
+        if (password && password_confirmation) {
+          if (password !== password_confirmation) {
+            res.send({
+              status: "failed",
+              message: "Password and confirm password do not match",
+            });
+          } else {
+            const salt = await bcrypt.genSalt(10);
+            const newHashPassword = await bcrypt.hash(password, salt);
+            await UserModal.findByIdAndUpdate(id, {
+              $set: {
+                password: newHashPassword,
+              },
+            });
+            res.send({
+              status: "success",
+              message: "Password reset successfully",
+            });
+          }
+        } else {
+          res.send({
+            status: "failed",
+            message: "All fields are required",
+          });
+        }
+      } catch (error) {
+        res.send({
+          status: "failed",
+          message: "Invalid token",
+          error: error.message,
+        });
+      }
+    } catch (error) {
+      res.send({
+        status: "failed",
+        message: "Failed to Reset Password",
+      });
+    }
+  };
+  
 }
 
 export default UserController;
